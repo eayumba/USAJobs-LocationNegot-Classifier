@@ -17,7 +17,7 @@ Key features used to build our model are in the table below. We concatenate the 
 
 | Model | Precision  | Recall  | F1 |
 | :---:   | :-: | :-: | :-: |
-| char_wb tfidf+word tfidf + SVM(linear kernel) | .92 | .54 |
+| char_wb tfidf+word tfidf + SVM(linear kernel) | .92 | .54 | .68 |
 
 Because `False Positives` are more expensive than `False Negatives`, we tune towards `precision` using a `.58` threshold cutoff point for classifying a job listing as `Remote Eligible` vs. `Non-Remote Eligible`.
 

@@ -16,11 +16,12 @@ def read_root():
     return {"USA Jobs Location Negotiable Classifier": "Given a set of USA Jobs descriptions, use this classifier to predict whether the locations for the jobs are negotiable or not."}
 
 
-@app.get("/predict/{job_descriptions}")
-def predict(job_descriptions: str):
-    descriptions = [job_descriptions]
+# API call currently set to only predict 1 job decription at a time for prototype, code refactored from worker.py "inference" function
+@app.get("/predict/{job_description}")
+def predict(job_description: str):
+    description = [job_description]
 
-    clean_text = [Preprocess(t).text.lower() for t in descriptions]
+    clean_text = [Preprocess(t).text.lower() for t in description]
 
     tfidf_module = model_setup.tfidf_trainer(pretrained_model=True)
     tfidf_out = tfidf_module.transform(clean_text)
@@ -30,8 +31,8 @@ def predict(job_descriptions: str):
 
     predictions_with_confidence = []
 
-    # always print out predictions
-    for ix, (t, pred) in enumerate(zip(descriptions, predictions)):
+    # always print out prediction
+    for ix, (t, pred) in enumerate(zip(description, predictions)):
 
         if pred >= enums.THRESHOLD:
             if pred >= enums.HIGH_CONFIDENCE:
@@ -49,4 +50,4 @@ def predict(job_descriptions: str):
                 predictions_with_confidence.append(
                     f"\n{t} -------------> \n [YELLOW]: Location Negotiable INEGLIBLE with medium confidence")
 
-    return {"predictions": predictions_with_confidence}
+    return {"prediction": predictions_with_confidence}

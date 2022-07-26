@@ -16,5 +16,7 @@ COPY ./jobs_classifier /code/jobs_classifier
 
 ENV PYTHONPATH "${PYTHONPATH}:/code/jobs_classifier"
 
+EXPOSE 80
+
 # 
 CMD ["uvicorn", "jobs_classifier.main:app", "--host", "0.0.0.0", "--port", "80"]

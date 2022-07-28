@@ -32,6 +32,7 @@ class tfidf_trainer:
                 self.preloaded_char_vectorizer = pickle.load(f)
 
     def fit(self, text_data: List[str]):
+        # vectorizer hyperparams
         self.new_word_vectorizer = TfidfVectorizer(
             sublinear_tf=True,
             stop_words="english",
@@ -63,6 +64,7 @@ class tfidf_trainer:
         ]:
             with open(f"pickle_files/{fit_model[1]}.pk", "wb") as fin:
                 pickle.dump(fit_model[0], fin)
+            # STORE THE NEWLY CRREATED PICKLE FILE
 
     def transform(self, text_data: List[str]):
         if self.pretrained_model:
@@ -73,6 +75,7 @@ class tfidf_trainer:
         else:
             tfidf_word = self.new_word_vectorizer.transform(text_data).toarray()
             tfidf_char = self.new_char_vectorizer.transform(text_data).toarray()
+            # 2d array
             tfidf_out = np.hstack([tfidf_word, tfidf_char])
 
         return tfidf_out
@@ -86,11 +89,13 @@ class JobSummaryClassifier:
                 self.pretrained_model = pickle.load(f)
 
     def fit(self, X, y):
+        # POSSIBLE PARAMS
         self.model = SVC(kernel="linear", probability=True, random_state=1234)
         self.model.fit(X, y)
         with open("pickle_files/classifier_model.pk", "wb") as f:
             pickle.dump(self.model, f)
             print("model trained")
+            # STORE PICKLE FILE CREATED HERE
 
     def predict(self, X):
         if self.load_pretrained:

@@ -1,22 +1,36 @@
-# 
-FROM python:3.9
+FROM mambaorg/micromamba:0.15.3
 
-# 
-WORKDIR /code
+EXPOSE 8501
 
-# 
-COPY ./requirements.txt /code/requirements.txt
+USER root
 
-# 
-RUN pip3 install --no-cache-dir --upgrade -r /code/requirements.txt
+RUN mkdir /opt/streamlit-fastapi-deploy-tutorial
+RUN chmod -R 777 /opt/streamlit-fastapi-deploy-tutorial
+WORKDIR /opt/streamlit-fastapi-deploy-tutorial
 
-# 
-COPY ./pickle_files /code/pickle_files
-COPY ./jobs_classifier /code/jobs_classifier
 
-ENV PYTHONPATH "${PYTHONPATH}:/code/jobs_classifier"
+USER micromamba
 
-EXPOSE 80
+COPY environment.yml environment.yml
+RUN micromamba install -y -n base -f environment.yml && \
+   micromamba clean --all --yes
 
-# 
-CMD ["uvicorn", "jobs_classifier.main:app", "--host", "0.0.0.0", "--port", "80"]
+
+USER root
+
+# OG FASTAPI STUFF
+COPY requirements.txt requirements.txt
+RUN pip3 install --no-cache-dir --upgrade -r requirements.txt
+
+ENV PYTHONPATH "${PYTHONPATH}:/opt/streamlit-fastapi-deploy-tutorial/jobs_classifier"
+
+# END FASTAPI STUFF
+
+# COPY ./jobs_classifier /opt/streamlit-fastapi-deploy-tutorial/jobs_classifier
+# COPY ./pickle_files /opt/streamlit-fastapi-deploy-tutorial/pickle_files
+
+COPY . streamlit-fastapi-deploy-tutorial/
+
+COPY run.sh run.sh
+RUN chmod a+x run.sh
+CMD ["./run.sh"]

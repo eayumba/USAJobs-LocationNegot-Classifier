@@ -1,7 +1,11 @@
 from collections import Counter
 import string
 import re
-from jobs_classifier import enums
+# from jobs_classifier import enums
+
+from importlib.machinery import SourceFileLoader
+
+enums = SourceFileLoader("enums", "/opt/streamlit-fastapi-deploy-tutorial/streamlit-fastapi-deploy-tutorial/jobs_classifier/enums.py").load_module()
 
 class Preprocess:
     def __init__(self, text: str):

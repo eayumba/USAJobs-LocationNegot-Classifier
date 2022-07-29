@@ -1,5 +1,6 @@
 import fastapi
 import pandas as pd
+import uvicorn
 
 import model_setup
 import enums
@@ -51,3 +52,7 @@ def predict(job_description: str):
                     f"\n{t} -------------> \n [YELLOW]: Location Negotiable INEGLIBLE with medium confidence")
 
     return {"prediction": predictions_with_confidence}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=3400)
